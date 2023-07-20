@@ -61,7 +61,7 @@
 @import url(./blocks/span/span.css);
 @import url(./blocks/span/_type/span_type_error.css);
 @import url(./blocks/auth/__input/auth__input.css);
-@import url(./blocks/auth/__input/_invalid/login__input_invalid.css);
+@import url(./blocks/auth/__input/_invalid/auth__input_invalid.css);
 @import url(./blocks/auth/__span/auth__span.css);
 @import url(./blocks/auth/__span/_type/auth__span_type_error.css);
 @import url(./blocks/auth/__contener/auth__contener.css);
@@ -71,3 +71,4 @@
 @import url(./blocks/auth/__submit/auth__submit.css);
 @import url(./blocks/auth/__submit/_disabled/auth__submit_disabled.css);
 @import url(./blocks/auth/__submit/_loading/auth__submit_loading.css);
+@import url(./blocks/auth/__form/auth__form.css);

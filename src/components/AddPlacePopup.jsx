@@ -1,7 +1,8 @@
 import PopupWithForm from "./PopupWithForm"
 import useFormValidation from "../utils/hooks/useFormValidation"
+import Input from "./Input"
 
-function AddPlacePopup({ isOpen, onClose, onAddPlace, isSend }) {
+function AddPlacePopup({ isOpen, onClose, onAddPlace, isSend, }) {
     const { values, errors, isValid, isInputValid, handleChange, reset } = useFormValidation()
 
     function resetForClose() {
@@ -25,7 +26,40 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, isSend }) {
           onYesButton={handleSubmit}
           isSend = {isSend}
           >
-          <input
+
+            <Input
+            name="title"
+            type="text"
+            placeholder={"Название"}
+            value={values.title ? values.title : ''}
+            onChange={handleChange}
+            isInputValid={isInputValid.title}
+            error={errors.title}
+            minLength={2}
+            maxLength={30}
+            disabled={isSend}
+            required
+             />
+
+            <Input
+            name="link"
+            type="url"
+            placeholder={"Ссылка на картинку"}
+            value={values.title ? values.link : ''}
+            onChange={handleChange}
+            isInputValid={isInputValid.link}
+            error={errors.link}
+            disabled={isSend}
+            required
+             />
+          
+        </PopupWithForm>
+    )
+}
+
+export default AddPlacePopup;
+
+/* <input
             className={`popup__input popup__input_place_name ${isInputValid.title === undefined || isInputValid.title ? '' : 'popup__input_invalid'}`}
             id="title"
             name="title"
@@ -50,9 +84,4 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, isSend }) {
             disabled={isSend}
             onChange={handleChange}
            />
-          <span id="link-error" className="span span_type_error">{errors.link}</span>
-        </PopupWithForm>
-    )
-}
-
-export default AddPlacePopup
+          <span id="link-error" className="span span_type_error">{errors.link}</span> */

@@ -43,4 +43,4 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isSend }) {
     )
 }
 
-export default EditAvatarPopup
+export default EditAvatarPopup;

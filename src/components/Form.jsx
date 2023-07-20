@@ -1,7 +1,8 @@
-function Form({ name, buttonText, children, isValid, onYesButton, isSend }) {
+function Form({ name, buttonText, children, isValid, onSubmit, isSend }) {
+  
 
     return(
-        <form name={name} noValidate onSubmit={onYesButton}>
+        <form name={name} noValidate onSubmit={onSubmit} className="auth__form">
           {children}
           {{login:
              <button

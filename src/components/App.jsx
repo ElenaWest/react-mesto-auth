@@ -39,7 +39,7 @@ function App() {
   const [userEmail, setUserEmail] = useState('')
 
   const [cards, setCards] = useState([])
-  console.log(cards)
+ /* console.log(cards) */
   const [isLoading, setIsLoading] = useState(true)
   const [deleteCardId, setdeleteCardId] = useState('')
   const [loggedIn, setLoggedIn] = useState(false)
@@ -64,7 +64,7 @@ function App() {
   useEffect(() => {
     if (localStorage.jwt) {
       getUserData(localStorage.jwt)
-        .then(res => {
+        .then(res => {        
           setUserEmail(res.data.email)
           setLoggedIn(true)
           navigate('/')
@@ -170,13 +170,13 @@ function App() {
     if (isLike) {
       api.deleteLike(card._id)
         .then(res => {
-          setCards(cards => cards.map((item) => item._id ? res : item))
+          setCards(cards => cards.map((item) => item._id === card._id ? res : item))
         })
         .catch((error) => console.error(`Ошибка при снятии лайка ${error}`)) 
     } else {
       api.addLike(card._id)
         .then(res => {
-          setCards(cards => cards.map((item) => item._id ? res : item))
+          setCards(cards => cards.map((item) => item._id === card._id ? res : item))
         })
         .catch((error) => console.error(`Ошибка при добавлении лайка ${error}`))
     }
@@ -221,8 +221,8 @@ function App() {
       <div className="page__contener">
         <Routes>
           <Route path='/' element={<ProtectedRoute
-            element={ForProtectedRoute}
-            userEmail={userEmail}
+            element = {ForProtectedRoute}
+            userEmail = {userEmail}
             onAddPlace = {handleAddPlaceClick}
             onEditProfile = {handleEditProfileClick}
             onEditAvatar = {handleEditAvatarClick}

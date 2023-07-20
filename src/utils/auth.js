@@ -37,7 +37,7 @@ function getUserData(token) {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            "Authorisation" : `Bearer ${token}`
+            "Authorization" : `Bearer ${token}`
         }})
     .then(res => getResponseData(res))
 }

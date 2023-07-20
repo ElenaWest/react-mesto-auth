@@ -3,6 +3,7 @@ import CurrentUserContext from '../contexts/CurrentUserContext.js';
 import LikeButton from "./LikeButton.jsx";
 
 function Card({ card, onCardClick, onDelete, onCardLike }) {
+    console.log(onCardLike)
     const currentUser =  useContext(CurrentUserContext) 
     return(
         <li className="element">
@@ -10,7 +11,7 @@ function Card({ card, onCardClick, onDelete, onCardLike }) {
             {currentUser._id === card.owner._id && <button className="element__trash" type="button" aria-label="Удалить" onClick={() => onDelete(card._id)} />}
             <div className="element__name-group">
                 <h2 className="element__title">{card.name}</h2>
-                <LikeButton onCardLike={onCardLike} myid={currentUser._id} cardid={card._id} />
+                <LikeButton onCardLike={onCardLike} myid={currentUser._id} card={card} />
             </div>
         </li>
     );

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 function Header({ name, dataUser }) {
     const [count, setCount] = useState(0)
+    /* useLocation - Улучшить код с использованием хука (планируется по времени)*/
 
     function handleClick() {
         count === 0 ? setCount(1) : setCount(0)
