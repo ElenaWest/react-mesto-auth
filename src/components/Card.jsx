@@ -3,7 +3,6 @@ import CurrentUserContext from '../contexts/CurrentUserContext.js';
 import LikeButton from "./LikeButton.jsx";
 
 function Card({ card, onCardClick, onDelete, onCardLike }) {
-    console.log(onCardLike)
     const currentUser =  useContext(CurrentUserContext) 
     return(
         <li className="element">

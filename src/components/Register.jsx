@@ -16,7 +16,7 @@ function Register({ name, handleRegister }) {
             <Input
               name="email"
               type="email"
-              placeholder={"Email"}
+              placeholder="Email"
               value={values.email}
               onChange={handleChange}
               isInputValid={isInputValid.email}
@@ -25,7 +25,7 @@ function Register({ name, handleRegister }) {
             <Input
               name="password"
               type="password"
-              placeholder={"Пароль"}
+              placeholder="Пароль"
               minLength={4}
               value={values.password}
               onChange={handleChange}

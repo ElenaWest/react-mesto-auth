@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import logo from '../images/logo.svg';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
-function Header({ name, dataUser }) {
+function Header({ userEmail }) {
     const [count, setCount] = useState(0)
-    /* useLocation - Улучшить код с использованием хука (планируется по времени)*/
+
+    const location = useLocation();
 
     function handleClick() {
         count === 0 ? setCount(1) : setCount(0)
@@ -16,8 +17,9 @@ function Header({ name, dataUser }) {
     }
 
     useEffect(() => {
+        const clientWidth = document.documentElement.clientWidth > '767';
         function closeBurgerForResize() {
-            if (document.documentElement.clientWidth > '767') {
+            if (clientWidth) {
                 setCount(0)
                 window.removeEventListener('resize', closeBurgerForResize)
             }
@@ -35,19 +37,20 @@ function Header({ name, dataUser }) {
               src={logo} 
               alt="Логотип Место"
                />
-            {name === 'signup' || name ==='signin' ?
-            <Link to={name === 'signup' ? '/sign-in' : '/sign-up'} className="header__button">
-                {name !== 'signup' ? 'Регистрация' : 'Войти'}
-            </Link>
-            :
+
+            {location.pathname === "/sign-up" && <Link to="/sign-in" className="header__button ">Войти</Link>}
+
+            {location.pathname === "/sign-in" && <Link to="/sign-up" className="header__button">Регистрация</Link>}
+            
+            {location.pathname === "/" &&
             <>
               <div className={`header__account_contener ${count !== 0 ? 'header__account_contener_opened' : ''}`}>
-                <p className="header__account">{dataUser}</p>
-                <Link to={`/sign-in`} className="header__button header__button_type_logged" onClick={onSingnOut}>Выйти</Link>
+                <p className="header__account">{userEmail}</p>
+                <Link to="/sign-in" className="header__button header__button_type_logged" onClick={onSingnOut}>Выйти</Link>
               </div>
               <button className={`header__menu ${count !==0 ? 'header__menu_close' : ''}`} onClick={handleClick}></button>
-            </>
-            }            
+            </>}
+                    
         </header>
     );
 }

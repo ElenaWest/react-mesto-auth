@@ -1,5 +1,4 @@
 import Header from "./Header.jsx";
-import Main from "./Main.jsx";
 import Footer from "./Footer.jsx";
 import PopupWithForm from "./PopupWithForm.jsx";
 import ImagePopup from "./ImagePopup.jsx";
@@ -11,59 +10,73 @@ import EditAvatarPopup from "./EditAvatarPopup.jsx";
 import AddPlacePopup from "./AddPlacePopup.jsx";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute.jsx";
-import ForProtectedRoute from "./ForProtectedRoute.jsx"
+import ProtectedRouteContent from "./ProtectedRouteContent.jsx"
 import InfoTooltip from "./InfoTooltip.jsx";
 import { registration, authorization, getUserData } from "../utils/auth.js"
+import Register from "./Register.jsx";
+import Login from "./Login.jsx";
 
 function App() {
   const navigate = useNavigate()
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false)
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false)
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false)
-  const [isAnimationPopup, setIsAnimationPopup] = useState(false)
+  const [isImagePopup, setIsImagePopup] = useState(false)
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false)
   const [isResultPopupOpen, setIsResultPopupOpen] = useState(false)
   const [selectedCard, setselectedCard] = useState({})
   const [isSend, setIsSend] = useState(false)
+  const [currentUser, setCurrentUser] =  useState({})
+  const [userEmail, setUserEmail] = useState('')
+  const [cards, setCards] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [deleteCardId, setdeleteCardId] = useState('')
+  const [loggedIn, setLoggedIn] = useState(false) 
+  const [isSuccessful, setIsSuccessful] = useState(false)
 
   const setStatesForClosePopups  = useCallback (() => {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
-    setIsAnimationPopup(false);
+    setIsImagePopup(false);
     setIsDeletePopupOpen(false)
     setIsResultPopupOpen(false)
-  }, [])
-
-  const [currentUser, setCurrentUser] =  useState({})
-  const [userEmail, setUserEmail] = useState('')
-
-  const [cards, setCards] = useState([])
- /* console.log(cards) */
-  const [isLoading, setIsLoading] = useState(true)
-  const [deleteCardId, setdeleteCardId] = useState('')
-  const [loggedIn, setLoggedIn] = useState(false)
- 
-  const [isSucsefull, setIsSucsefull] = useState(false)
-
-  const closeAllPopupForClickOnEsc = useCallback ((e) => {
-    if (e.key === 'Escape') {
-      setStatesForClosePopups();
-      document.addEventListener('keydown', closeAllPopupForClickOnEsc)}
-    },[setStatesForClosePopups])
-
-  function setEventListenerForDocument() {
-    document.addEventListener('keydown', closeAllPopupForClickOnEsc)
-  }
-
-  const closeAllPopups = useCallback(() => {
-    setStatesForClosePopups()
-    document.removeEventListener('keydown', closeAllPopupForClickOnEsc)
-  },[setStatesForClosePopups, closeAllPopupForClickOnEsc])
+  }, [])  
 
   useEffect(() => {
-    if (localStorage.jwt) {
-      getUserData(localStorage.jwt)
+    const handleEscClose = (e) => {
+      if (e.key === "Escape") {
+        setStatesForClosePopups();
+      }
+    };
+      if (
+      isAddPlacePopupOpen ||
+      isImagePopup ||
+      isDeletePopupOpen ||
+      isEditAvatarPopupOpen ||
+      isEditProfilePopupOpen ||
+      isResultPopupOpen
+    ) {
+      document.addEventListener("keydown", handleEscClose);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscClose);
+    };
+  }, [
+    isAddPlacePopupOpen,
+    isImagePopup,
+    isDeletePopupOpen,
+    isEditAvatarPopupOpen,
+    isEditProfilePopupOpen,
+    isResultPopupOpen,
+    setStatesForClosePopups,
+  ]);
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("jwt")
+    if (jwt) {
+      getUserData(jwt)
         .then(res => {        
           setUserEmail(res.data.email)
           setLoggedIn(true)
@@ -77,29 +90,24 @@ function App() {
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
-    setEventListenerForDocument();
   }
 
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
-    setEventListenerForDocument();
   }
   
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
-    setEventListenerForDocument();
   }
 
   function handleCardClick(card) {
     setselectedCard(card);
-    setIsAnimationPopup(true);
-    setEventListenerForDocument();
+    setIsImagePopup(true);
   }
 
   function handleDeletePopupClick(cardId) {
     setdeleteCardId(cardId);
     setIsDeletePopupOpen(true);
-    setEventListenerForDocument();
   }
 
   useEffect(() => {
@@ -123,7 +131,7 @@ function App() {
         setCards(cards.filter(card => {
           return card._id !== deleteCardId
         }))
-        closeAllPopups()
+        setStatesForClosePopups()
       })
       .catch((error) => console.error(`Ошибка при удалении карточки ${error}`))
       .finally(() => setIsSend(false))
@@ -134,7 +142,7 @@ function App() {
     api.setUserInfo(dataUser)
       .then(res => {
         setCurrentUser(res)
-        closeAllPopups()
+        setStatesForClosePopups()
         reset()
       })
       .catch((error) => console.error(`Ошибка при редактировании данных профиля ${error}`))
@@ -146,7 +154,7 @@ function App() {
     api.setNewAvatar(dataUser)
       .then(res => {
         setCurrentUser(res)
-        closeAllPopups()
+        setStatesForClosePopups()
         reset()
       })
       .catch((error) => console.error(`Ошибка при редактировании изображения ${error}`))
@@ -158,7 +166,7 @@ function App() {
     api.addCard(dataCard)
       .then((res) => {
         setCards([res, ...cards])
-        closeAllPopups()
+        setStatesForClosePopups()
         reset()
       })
       .catch((error) => console.error(`Ошибка при добавлении новой карточки ${error}`))
@@ -193,7 +201,7 @@ function App() {
       })
       .catch(error => {
         setIsResultPopupOpen(true)
-        setIsSucsefull(false)
+        setIsSuccessful(false)
         console.error(`Ошибка при авторизации ${error}`)
       })
       .finally(() => setIsSend(false))
@@ -204,13 +212,13 @@ function App() {
     registration(password, email)
       .then(() => {
         setIsResultPopupOpen(true)
-        setIsSucsefull(true)
+        setIsSuccessful(true)
         window.scrollTo(0, 0)
         navigate('/sign-in')
       })
       .catch(error => {
         setIsResultPopupOpen(true)
-        setIsSucsefull(false)
+        setIsSuccessful(false)
         console.error(`Ошибка при регистрации ${error}`)
       })
       .finally(() => setIsSend(false))
@@ -219,10 +227,12 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page__contener">
+        <Header
+          userEmail = {userEmail}
+         />
         <Routes>
           <Route path='/' element={<ProtectedRoute
-            element = {ForProtectedRoute}
-            userEmail = {userEmail}
+            element = {ProtectedRouteContent}
             onAddPlace = {handleAddPlaceClick}
             onEditProfile = {handleEditProfileClick}
             onEditAvatar = {handleEditAvatarClick}
@@ -236,15 +246,13 @@ function App() {
             } />
           <Route path='/sign-up' element={
             <>
-              <Header name='signup' />
-              <Main name='signup' handleRegister={handleRegister} />
+              <Register name='signup' handleRegister={handleRegister} />
             </>
             } />
           <Route path='sign-in' element={
             <>
-              <Header name='signin' />
-              <Main name='signin' handleLogin={handleLogin} />
-           </>
+              <Login name='signin' handleLogin={handleLogin} />           
+            </>
             } />
           <Route path='*' element={<Navigate to='/' replace />} />
         </Routes>
@@ -254,19 +262,19 @@ function App() {
           <EditProfilePopup
             onUpdateUser = {handleUpdateUser}
             isOpen = {isEditProfilePopupOpen}
-            onClose = {closeAllPopups}
+            onClose = {setStatesForClosePopups}
             isSend = {isSend}
            />
           <AddPlacePopup
             onAddPlace = {handleAddPlaceSubmit}
             isOpen = {isAddPlacePopupOpen}
-            onClose = {closeAllPopups}
+            onClose = {setStatesForClosePopups}
             isSend = {isSend}
            />
           <EditAvatarPopup
             onUpdateAvatar = {handleUpdateAvatar}
             isOpen = {isEditAvatarPopupOpen}
-            onClose = {closeAllPopups}
+            onClose = {setStatesForClosePopups}
             isSend = {isSend}         
            />
           <PopupWithForm
@@ -274,21 +282,21 @@ function App() {
             title='Вы уверены?'
             buttonText='Да'
             isOpen = {isDeletePopupOpen}
-            onClose = {closeAllPopups}
+            onClose = {setStatesForClosePopups}
             onYesButton = {handleCardDelete}
             isSend = {isSend}
           />
           <ImagePopup
-            onClose = {closeAllPopups}
+            onClose = {setStatesForClosePopups}
             card = {selectedCard}
-            isOpen = {isAnimationPopup}
+            isOpen = {isImagePopup}
           />
 
           <InfoTooltip
             name='result'
-            isSucsefull={isSucsefull}
+            isSuccessful={isSuccessful}
             isOpen={isResultPopupOpen}
-            onClose={closeAllPopups}
+            onClose={setStatesForClosePopups}
            />
       </div>
     </CurrentUserContext.Provider>

@@ -36,7 +36,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, isSend }) {
             <Input
             name="username"
             type="text"
-            placeholder={"Имя пользователя"}
+            placeholder="Имя пользователя"
             value={values.username ? values.username : ''}
             onChange={handleChange}
             isInputValid={isInputValid.username}
@@ -50,7 +50,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, isSend }) {
             <Input
             name="status"
             type="text"
-            placeholder={"О себе"}
+            placeholder="О себе"
             value={values.status ? values.status : ''}
             onChange={handleChange}
             isInputValid={isInputValid.status}
@@ -66,32 +66,3 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, isSend }) {
 }
 
 export default EditProfilePopup;
-
-            // <input
-            //   className={`popup__input ${isInputValid.username === undefined || isInputValid.username ? '' : 'popup__input_invalid'}`}
-            //   id="username"
-            //   name="username"
-            //   type="text"
-            //   placeholder="Имя пользователя"
-            //   minLength={2}
-            //   maxLength={40}
-            //   required
-            //   value={values.username ? values.username : ''}
-            //   disabled={isSend}
-            //   onChange={handleChange}
-            // />
-            // <span className="span span_type_error">{errors.username}</span>
-            // <input
-            //   className={`popup__input ${isInputValid.status === undefined || isInputValid.status ? '' : 'popup__input_invalid'}`}
-            //   id="status"
-            //   name="status"
-            //   type="text"
-            //   placeholder="О себе"
-            //   minLength={2}
-            //   maxLength={200}
-            //   required
-            //   value={values.status ? values.status : ''}
-            //   disabled={isSend}
-            //   onChange={handleChange}
-            // />
-            // <span className="span span_type_error">{errors.status}</span>
